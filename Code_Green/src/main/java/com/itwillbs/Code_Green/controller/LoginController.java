@@ -10,17 +10,18 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.itwillbs.Code_Green.service.KakaoService;
+import com.itwillbs.Code_Green.service.MemberService;
+import com.itwillbs.Code_Green.vo.MemberVO;
 
 @Controller
 public class LoginController {
-	
+
 	/* NaverLoginBO */
 	private NaverLoginBO naverLoginBO;
 	private String apiResult = null;
@@ -29,6 +30,9 @@ public class LoginController {
 	private void setNaverLoginBO(NaverLoginBO naverLoginBO) {
 		this.naverLoginBO = naverLoginBO;
 	}
+
+	@Autowired
+	private MemberService service;
 	@Autowired
 	private KakaoService kService;
 
@@ -58,38 +62,54 @@ public class LoginController {
 
 		oauthToken = naverLoginBO.getAccessToken(session, code, state);
 
-		System.out.println("code: " + code);
-		System.out.println("oauthToken: " + oauthToken);
-		
-//		 로그인 사용자 정보를 읽어온다.
-		apiResult = naverLoginBO.getUserProfile(oauthToken);
+		// 1. 로그인 사용자 정보를 읽어온다.
+		apiResult = naverLoginBO.getUserProfile(oauthToken); // String형식의 json데이터
 
-		/** apiResult json 구조
-		{"resultcode":"00",
-		 "message":"success",
-		 "response":{"id":"33666449","nickname":"shinn****","age":"20-29","gender":"M","email":"sh@naver.com","name":"\uc2e0\ubc94\ud638"}}
-		**/
-		
-		//2. String형식인 apiResult를 json형태로 바꿈
+		// 2. String형식인 apiResult를 json형태로 바꿈
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(apiResult);
 		JSONObject jsonObj = (JSONObject) obj;
-		
-		//3. 데이터 파싱 
-		//Top레벨 단계 _response 파싱
-		JSONObject response_obj = (JSONObject)jsonObj.get("response");
-		//response의 nickname값 파싱
-		String name = (String)response_obj.get("name");
- 
-		System.out.println("name : " + name);
-		//4.파싱 닉네임 세션으로 저장
-		session.setAttribute("sId",name); //세션 생성
-		
+
+		// 3. 데이터 파싱
+		// Top레벨 단계 _response 파싱
+		JSONObject response_obj = (JSONObject) jsonObj.get("response");
+
+		// response의 값 파싱
+		String member_name = (String) response_obj.get("name");
+		String member_id = (String) response_obj.get("email");
+		String member_phone = (String) response_obj.get("mobile");
+		String member_email = (String) response_obj.get("email");
+
+		// MemberVO 객체에 저장
+		MemberVO member = new MemberVO();
+		member.setMember_name(member_name);
+		member.setMember_id(member_id);
+		member.setMember_phone(member_phone);
+		member.setMember_email(member_id);
+
+		// 회원 유무 확인
+		MemberVO existMember = service.getMemberInfo(member_id);
+
+		if (existMember == null) {
+			int insertCount = service.joinMember(member);
+
+			if (insertCount == 0) {
+				model.addAttribute("msg", "회원가입 실패");
+				return "member/fail_back";
+			}
+		}
+
+//			Session 객체에 저장
+		MemberVO getMem = service.getMemberInfo(member.getMember_id());
+		session.setAttribute("sId", member.getMember_id()); // 세션아이디
+		session.setAttribute("sIdx", getMem.getMember_idx());// 세션 IDX
+		session.setAttribute("sEmail", getMem.getMember_email()); // 세션 이메일
+
 		model.addAttribute("result", apiResult);
 
-
 		/* 네이버 로그인 성공 페이지 View 호출 */
-		return "member/naverLogin_result";
-	}
 
+		return "redirect:/";
+
+	}
 }
