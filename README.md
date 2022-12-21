@@ -84,3 +84,19 @@
 ![KakaoTalk_20221205_042156266.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d5195275-4a5f-49fe-b1af-36aeb179508b/KakaoTalk_20221205_042156266.png)
 
 ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2e6b0f45-3048-4ab7-964c-06c98de81b47/Untitled.png)
+
+### 힘들었던점,문제
+
+- 문제
+
+장바구니에 같은 상품을 담으면 장바구니에서 갯수가 증가하는게 아니라 같은 상품 목록이 새로 생기는 문제가 생겼다 
+
+- 해결
+    
+    ON DUPLICATE KEY를 사용하여 중복시 UPDATE를 해주어 갯수만 늘릴 수 있는것을  MySQL workbench 를 통해 상품,회원,장바구니 번호에 복합키를 걸어 식별에 용이하게 하였다 
+    
+
+### 느낀 점과 향후 계획
+
+- **S**pring을 배우기 시작하면서 시작했기 때문에 이해도가 부족했지만 Spring의 DI 처럼 편의성이 좋아 적응을 할 수 있었고 Spring에 대해 더 공부하여 Spring의 장점을 끌어올리고 싶었습니다
+- 네이버 로그인은 아이디만 가져와 세션만 유지하게 만들었지만 기존계정과 연동하게끔 할 예정입니다 그리고 이를 바탕으로 카카오,페이스북,구글 등의 다양한 간편로그인도 구현 할 계획입니다
