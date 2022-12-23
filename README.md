@@ -23,7 +23,8 @@
 개발 기간 
     22.10.06 ~ 22.12.07
 
-[베지터틀 비건 쇼핑몰_상세내용.pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/df8412b4-ae79-482c-835c-42ad813f968d/%EB%B2%A0%EC%A7%80%ED%84%B0%ED%8B%80_%EB%B9%84%EA%B1%B4_%EC%87%BC%ED%95%91%EB%AA%B0_%EC%83%81%EC%84%B8%EB%82%B4%EC%9A%A9.pdf)
+[베지터틀 비건 쇼핑몰_상세내용.pdf][포트폴리오_김영훈.pdf](https://github.com/gns253/Code_Green/files/10294339/_.pdf)
+
 
 - **간트차트**
     ![2간트차트](https://user-images.githubusercontent.com/114043149/209319128-b2e41c1a-1ba0-4200-ab83-c12d6c0bcddc.png)
